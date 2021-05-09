@@ -18,7 +18,7 @@ namespace TakeBotApi.Controllers
 
         // GET: api/Repositories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RepositoryDTO>>> GetRepositories()
+        public async Task<ActionResult<Dictionary<string, RepositoryDTO>>> GetRepositories()
         {
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
@@ -29,11 +29,40 @@ namespace TakeBotApi.Controllers
             var repositories = await JsonSerializer.DeserializeAsync<List<Repository>>(
                 await streamTask);
 
-            return repositories.Where(x => x.Language == "C#")
+            var listRepositories = repositories.Where(x => x.Language == "C#")
                 .OrderBy(y => y.CreatedDate)
-                .Select(x => RepositoryToDTO(x))
-                .ToList()
-                .GetRange(0, 5);
+                .Select(z => RepositoryToDTO(z))
+                .ToList();
+
+            return RepositoryDtoListToDictionary(listRepositories);
+
+        }
+
+        private static Dictionary<string, RepositoryDTO> RepositoryDtoListToDictionary(List<RepositoryDTO> listRepositories)
+        {
+            Dictionary<string, RepositoryDTO> repReturn;
+
+            if (listRepositories.Any())
+            {
+                repReturn = new Dictionary<string, RepositoryDTO>()
+                {
+                    ["1"] = listRepositories[1]
+                };
+            }
+            else
+            {
+                repReturn = new Dictionary<string, RepositoryDTO>();
+            }
+
+            for (int i = 1; i < 5; i++)
+            {
+                if (i < listRepositories.Count())
+                {
+                    repReturn[(i + 1).ToString()] = listRepositories[i];
+                }
+            }
+
+            return repReturn;
         }
 
         private static RepositoryDTO RepositoryToDTO(Repository repository) =>
