@@ -1,7 +1,8 @@
-﻿using System;
+﻿using BotTake.Models;
+using System;
 using System.Text.Json.Serialization;
 
-namespace BotTake.Models
+namespace TodoApi.Models
 {
     public class Repository
     {
