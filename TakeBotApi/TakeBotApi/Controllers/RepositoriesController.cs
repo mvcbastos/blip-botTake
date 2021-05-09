@@ -46,7 +46,7 @@ namespace TakeBotApi.Controllers
             {
                 repReturn = new Dictionary<string, RepositoryDTO>()
                 {
-                    ["1"] = listRepositories[1]
+                    ["1"] = listRepositories[0]
                 };
             }
             else
